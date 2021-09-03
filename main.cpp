@@ -77,7 +77,7 @@ int main(int argc,char** argv)
 
         // pipe for signal handler
         if(pipe2(xupnpd::__sig_pipe,O_NONBLOCK))
-            { utils::trace(utils::log_err,"pipe2: %s",strerror(errno)); goto err; }
+            { utils::trace(utils::log_err,"pipe2: errno %d, %s",errno,strerror(errno)); goto err; }
 
         // fork and exit
         if(cfg::daemon_mode)

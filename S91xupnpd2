@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# if app not exist
+if [ ! -f /etc/xupnpd2.tar.bz2 ]; then
+    exit 0
+fi
+
+# get params
+. /etc/scripts/global.sh
+
+LOG="logger -t xupnpd2"
+
+start() {
+    get_param
+    if [ "$acryptDLNA" == "0" ]; then
+        $LOG "xupnpd2 start"
+        mkdir -p /tmp/xupnpd2/
+        cd /tmp/xupnpd2/
+        tar -xvf /etc/xupnpd2.tar.bz2
+        iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
+        ( sleep 30; ./get_playlist_planeta.sh; ./xupnpd > /dev/null 2>&1; ) &
+    fi
+}
+
+stop() {
+  $LOG "xupnpd2 stop"
+    get_param
+    iptables -D INPUT -p tcp --dport 8080 -j ACCEPT
+    killall -9 get_playlist_planeta.sh
+    killall -q xupnpd
+    killall -q -SIGKILL xupnpd
+    rm -rf /tmp/xupnpd2/
+}
+
+get_param() {
+    eval `nvram_buf_get 2860 acryptDLNA`
+}
+
+case "$1" in
+        start)
+            start
+            ;;
+
+        stop)
+            stop
+            ;;
+
+        restart)
+            stop
+            start
+            ;;
+
+        *)
+            echo $"Usage: $0 {start|stop|restart}"
+            exit 1
+esac

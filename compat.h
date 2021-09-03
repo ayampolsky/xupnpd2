@@ -43,9 +43,11 @@ typedef unsigned int    socket_t;
 typedef off_t           off64_t;
 #endif /*  __FreeBSD__  */
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__MIPSEL__)
 #include <unistd.h>
+#if defined(__APPLE__)
 #define O_LARGEFILE     0
+#endif
 typedef off_t           off64_t;
 #define lseek64         lseek
 int pipe2(int*,int);

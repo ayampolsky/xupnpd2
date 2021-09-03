@@ -1,11 +1,16 @@
-LUA     = lua-5.3.5
-CFLAGS  = -Istlport -fno-exceptions -fno-rtti -I. -Os -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DNO_SQLITE -DNO_LIBUUID -I$(LUA)
-OBJS    = main.o common.o ssdp.o http.o soap.o soap_int.o db_mem.o scan.o mime.o charset.o scripting.o live.o md5.o luajson.o newdelete.o \
+LUA           = lua-5.3.5
+CFLAGS_STATIC = -static -static-libgcc -static-libstdc++
+CFLAGS        = -std=c++11 -Istlport -fno-exceptions -fno-rtti $(CFLAGS_STATIC) -I. -Os -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DNO_SQLITE -DNO_LIBUUID -I$(LUA)
+OBJS          = main.o common.o ssdp.o http.o soap.o soap_int.o db_mem.o scan.o mime.o charset.o scripting.o live.o md5.o luajson.o newdelete.o \
  compat.o plugin_hls_common.o plugin_hls.o plugin_hls_new.o plugin_tsbuf.o plugin_lua.o plugin_udprtp.o plugin_tsfilter.o
-LIBS    = $(LUA)/liblua.a
+LIBS          = $(LUA)/liblua.a \
+ $(STAGING_DIR)/toolchain-mipsel_24kc_gcc-5.4.0_uClibc-1.0.14/lib/libm.a \
+ $(STAGING_DIR)/toolchain-mipsel_24kc_gcc-5.4.0_uClibc-1.0.14/lib/libdl.a
+# $(STAGING_DIR)/../build_dir/toolchain-mipsel_24kc_gcc-5.4.0_uClibc-1.0.14/uClibc-ng-1.0.14/ldso/libdl/libdl_so.a
 
 all: version $(LIBS) $(OBJS)
-	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CC) -B $(LIBEXEC) -o xupnpd $(OBJS) $(LIBS) -Wl,-E -lm -ldl
+	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CC) -B $(LIBEXEC) $(CFLAGS_STATIC) -o xupnpd $(OBJS) $(LIBS)
+#	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CC) -B $(LIBEXEC) -o xupnpd $(OBJS) $(LIBS) -Wl,-E -lm -ldl
 	$(STRIP) xupnpd
 
 $(LUA)/liblua.a:
@@ -19,7 +24,8 @@ clean:
 	$(RM) -f $(OBJS) xupnpd.db xupnpd version.h
 
 .c.o:
-	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CC) -c -o $@ $<
+	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CC) $(CFLAGS_STATIC) -c -o $@ $<
 
 .cpp.o:
 	PATH=$(PATH):$(LIBEXEC) STAGING_DIR=$(STAGING_DIR) $(CPP) -c $(CFLAGS) -o $@ $<
+

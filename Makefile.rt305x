@@ -1,0 +1,10 @@
+# RT305x
+STAGING_DIR     = /home/alex/openwrt/staging_dir/
+BIN             = $(STAGING_DIR)/toolchain-mipsel_24kc_gcc-5.4.0_uClibc-1.0.14/bin
+LIBEXEC         = $(STAGING_DIR)/toolchain-mipsel_24kc_gcc-5.4.0_uClibc-1.0.14/libexec/gcc/mipsel-openwrt-linux-uclibc/5.4.0
+CC              = $(BIN)/mipsel-openwrt-linux-uclibc-gcc
+CPP             = $(BIN)/mipsel-openwrt-linux-uclibc-gcc
+STRIP           = $(BIN)/mipsel-openwrt-linux-uclibc-strip
+RM              = rm
+
+include build/rules_embed.mk

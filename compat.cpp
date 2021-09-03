@@ -6,7 +6,7 @@
 
 #include "compat.h"
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__MIPSEL__)
 #include <fcntl.h>
 
 int pipe2(int* fd,int flags)
