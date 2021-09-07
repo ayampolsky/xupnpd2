@@ -14,7 +14,9 @@
 #include "mime.h"
 #include "db.h"
 #include "ssdp.h"
+#ifndef NO_LUA
 #include "scripting.h"
+#endif
 #include "live.h"
 
 #ifndef _WIN32
@@ -933,10 +935,14 @@ bool http::req::main(void)
         {
             std::string::size_type n=url.find_last_of('.');
 
+#ifndef NO_LUA
             if(n!=std::string::npos && !strcmp(url.c_str()+n+1,"lua"))  // lua script
                 return scripting::main(*this,cfg::http_www_root+url);
             else
                 return sendfile(cfg::http_www_root+url);                // file
+#else
+            return sendfile(cfg::http_www_root+url);                    // file
+#endif
         }
     }
 

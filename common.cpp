@@ -40,7 +40,9 @@
 #include "ssdp.h"
 #include "http.h"
 #include "charset.h"
+#ifndef NO_LUA
 #include "scripting.h"
+#endif
 #include "live.h"
 #include "scan.h"
 #include "md5.h"
@@ -799,8 +801,10 @@ bool xupnpd::all_init_1(int argc,char** argv)
     if(!mime::init())
         return false;
 
+#ifndef NO_LUA
     if(!scripting::init())
         return false;
+#endif
 
 #ifdef _WIN32
     WSADATA wsaData;
@@ -901,7 +905,9 @@ void xupnpd::all_done_1(void)
 {
     mime::done();
 
+#ifndef NO_LUA
     scripting::done();
+#endif
 
     if(utils::trace_fd!=INVALID_SOCKET)
         closesocket(utils::trace_fd);

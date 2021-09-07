@@ -7,4 +7,5 @@ CPP             = $(BIN)/mipsel-openwrt-linux-uclibc-gcc
 STRIP           = $(BIN)/mipsel-openwrt-linux-uclibc-strip
 RM              = rm
 
-include build/rules_embed.mk
+include build/rules_embed_no_lua.mk
+#include build/rules_embed.mk

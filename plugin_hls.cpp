@@ -5,7 +5,9 @@
  */
 
 #include "plugin_hls.h"
+#ifndef NO_LUA
 #include "plugin_lua.h"
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -69,7 +71,9 @@ bool hls::context::resolv_url(const std::string& url,std::string& real_url)
 
         if(!last_update_time || now-last_update_time>refresh_period)
         {
+#ifndef NO_LUA
             current_url=luas::translate_url(callback,url);
+#endif
 
             last_update_time=now;
         }

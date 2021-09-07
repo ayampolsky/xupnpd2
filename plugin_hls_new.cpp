@@ -5,7 +5,9 @@
  */
 
 #include "plugin_hls_new.h"
+#ifndef NO_LUA
 #include "plugin_lua.h"
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -155,7 +157,9 @@ bool hls_new::metastream::update_stream_info(hls::chunks_list& chunks)
 
         if(!last_update_time || now-last_update_time>refresh_period)
         {
+#ifndef NO_LUA
             current_url=luas::translate_url(callback,url);
+#endif
 
             last_update_time=now;
         }

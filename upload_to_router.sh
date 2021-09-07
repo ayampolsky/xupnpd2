@@ -15,6 +15,6 @@ tar -cjvf etc/xupnpd2.tar.bz2 \
 	xupnpd.cfg \
 	get_playlist_planeta.sh
 
-cp xupnpd.cfg etc/
+#cp xupnpd.cfg etc/
 
 scp -r etc/* "root@${ROUTER_IP_ADDRESS}:${ROUTER_DIR}"

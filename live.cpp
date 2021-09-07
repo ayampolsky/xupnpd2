@@ -29,7 +29,9 @@
 #include "plugin_hls.h"
 #include "plugin_hls_new.h"
 #include "plugin_tsbuf.h"
+#ifndef NO_LUA
 #include "plugin_lua.h"
+#endif
 #include "plugin_udprtp.h"
 #include "plugin_tsfilter.h"
 
@@ -98,7 +100,9 @@ bool live::init(void)
     builtin["hls2"]=hls::sendurl2;
     builtin["hls3"]=hls::sendurl3;
     builtin["hls4"]=hls_new::sendurl;
+#ifndef NO_LUA
     builtin["lua"]=luas::sendurl;
+#endif
 
 #ifndef _WIN32
     builtin["tsbuf"]=tsbuf::sendurl;
@@ -349,8 +353,10 @@ int live::split_handlers(const std::string& s,std::list<handler_desc_t>& handler
 
         n=handler.find('.');
 
+#ifndef NO_LUA
         if(n!=std::string::npos && handler.substr(n+1)=="lua")
             { opts.swap(handler); handler="lua"; }
+#endif
 
         if(!handler.empty())
             { handlers.push_back(handler_desc_t(handler,opts)); num++; }
@@ -390,7 +396,9 @@ bool live::sendurl(http::req* req,const std::string& url,const std::string& hand
 
     if(!url_translator.empty())
     {
+#ifndef NO_LUA
         real_url=luas::translate_url(url_translator,url);
+#endif
 
         if(real_url.empty())
             return false;
