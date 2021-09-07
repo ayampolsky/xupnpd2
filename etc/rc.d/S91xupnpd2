@@ -17,6 +17,11 @@ start() {
         mkdir -p /tmp/xupnpd2/
         cd /tmp/xupnpd2/
         tar -xvf /etc/xupnpd2.tar.bz2
+
+	if [ -f /etc/xupnpd.cfg ]; then
+		cp /etc/xupnpd.cfg ./
+	fi
+
         iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
         ( sleep 30; ./get_playlist_planeta.sh; ./xupnpd > /dev/null 2>&1; ) &
     fi
