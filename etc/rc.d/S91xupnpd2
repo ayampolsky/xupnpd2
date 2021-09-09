@@ -22,8 +22,12 @@ start() {
 		cp /etc/xupnpd.cfg ./
 	fi
 
-        iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
-        ( sleep 30; ./get_playlist_planeta.sh; ./xupnpd > /dev/null 2>&1; ) &
+        ( \
+            sleep 30; \
+            iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT; \
+            ./get_playlist_planeta.sh; \
+            ./xupnpd > /dev/null 2>&1; \
+        ) &
     fi
 }
 
